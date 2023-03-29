@@ -1,0 +1,8 @@
+import 'package:dice/dice.dart';
+import 'package:test/test.dart';
+
+void main() {
+  test('calculate', () {
+    expect(calculate(), 42);
+  });
+}
