@@ -18,6 +18,7 @@ void main(List<String> arguments) {
   var explode;
   var total10Again = List.empty(growable: true);
   var total9Again = List.empty(growable: true);
+  var total8Again = List.empty(growable: true);
   var ctx = res['dice'];
   var cont = int.parse(ctx);
   var totalDice = List.filled(cont, 0, growable: true);
@@ -36,8 +37,29 @@ void main(List<String> arguments) {
     if (successes.containsKey('8') ||
         successes.containsKey('9') ||
         successes.containsKey('10')) {
+      var eights = 0;
       var nines = 0;
       var tens = 0;
+      if (res['8again']) {
+        eights = successes['8'] ?? 0;
+        total8Again = eights > 0
+            ? List.generate(
+                eights, (_) => d20.rollWithStatistics('1d10').finalResult)
+            : [0];
+        for (var e in total8Again) {
+          explosions.update(e.toString(), (x) => x + 1, ifAbsent: () => 1);
+        }
+        nines = successes['9'] ?? 0;
+        total9Again = nines > 0
+            ? List.generate(
+                nines, (_) => d20.rollWithStatistics('1d10').finalResult)
+            : [0];
+        for (var e in total9Again) {
+          explosions.update(e.toString(), (x) => x + 1, ifAbsent: () => 1);
+        }
+      } else {
+        eights = successes['8'];
+      }
       if (res['9again']) {
         nines = successes['9'] ?? 0;
         total9Again = nines > 0
@@ -68,11 +90,8 @@ void main(List<String> arguments) {
     final ninesEx = explosions['9'] ?? 0;
     final tensEx = explosions['10'] ?? 0;
 
-    print(total10Again);
-    print("tens: $tens");
-
     totSuccess ??= 0; // Assign 0 if null
-    print('$totalDice, Additional: $total10Again');
+    print('$totalDice, Additional: $total8Again, $total9Again, $total10Again');
     print(
         '8s: ${eights + eightsEx} 9s: ${nines + ninesEx}, 10s ${tens + tensEx}');
   }
